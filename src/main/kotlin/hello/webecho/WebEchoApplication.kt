@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
 import reactor.kotlin.core.publisher.toMono
 
 @SpringBootApplication
@@ -16,11 +17,12 @@ class WebEchoApplication
 @RequestMapping("/echo")
 class EchoController {
 
-    private val logger = LoggerFactory.getLogger(EchoController::class.java);
+    private val logger = LoggerFactory.getLogger(EchoController::class.java)
 
     @GetMapping
-    fun answer(@RequestParam say: String) =
-        "Hello $say".toMono()
+    fun answer(@RequestParam say: String, @RequestParam(required = false) count: Number?) =
+        Flux.range(0, count?.toInt() ?: 1)
+            .map { "Hello $say" }
             .doOnNext {
                 logger.info(it)
                 logger.debug(it)

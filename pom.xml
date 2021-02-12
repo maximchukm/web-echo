@@ -10,12 +10,13 @@
     </parent>
     <groupId>hello</groupId>
     <artifactId>web-echo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>web-echo</name>
     <description>Simple echo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.4.21</kotlin.version>
+        <dockerfile-maven-version>1.4.13</dockerfile-maven-version>
     </properties>
     <dependencies>
         <dependency>
@@ -81,6 +82,27 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${dockerfile-maven-version}</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>maxmichukm/web-echo</repository>
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
